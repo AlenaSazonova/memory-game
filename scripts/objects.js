@@ -38,6 +38,7 @@ let allCards = document.querySelectorAll('.card');
 function turnOverCard(event) {
     const cardSide = event.currentTarget; 
     const id = event.target.dataset.id;
+    console.log(id)
 
     if (!cardSide.classList.contains('on')) {
         cardSide.classList.remove('off');
