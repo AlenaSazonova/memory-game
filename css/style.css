@@ -78,4 +78,53 @@
   
   /*--------------------*/
 
+.menu {
+  min-height: 100%;
+  min-width: 1200px;
+  padding: 0px 15px;
+  margin: 0 auto;
+  display: flex;
+  background-color: rgba(247, 216, 237, 0.5);
+}
 
+.col {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  align-items: center;
+}
+
+.card {
+  position: relative;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  perspective: 1000px;
+}
+
+.card-img {
+  width: 200px;
+  height: 260px;
+  margin-top: 100px;
+  border-radius: 30px;
+  border: 5px solid rgba(214, 91, 202, 0.6);
+  box-shadow: 2px 2px 2px rgb(204, 178, 183);
+  backface-visibility: hidden;
+}
+
+.card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.on {
+  transform: rotateY(-180deg);
+}
+
+.off {
+  transform: rotateY(0deg);
+}
