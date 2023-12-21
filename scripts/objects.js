@@ -19,19 +19,16 @@ renderHandler()
 
 
 function templateImg(imgBack) {
+    console.log(randomArr)
+    
     let img1 = (cards.find((el) => randomArr[index] === el.id)).img;
     index++
-
     let id1 = (cards.find((el) => randomArr[index - 1] === el.id)).id;
-    console.log(randomArr)
-    console.log(id1)
-
+    
 
     let img2 = (cards.find((el) => randomArr[index] === el.id)).img;
     index++
-
     let id2 = (cards.find((el) => randomArr[index - 1] === el.id)).id;
-    console.log(id2)
 
     const col = document.createElement('div');
     col.classList.add('col');
@@ -82,7 +79,6 @@ let allCards = document.querySelectorAll('.card');
 function turnOverCard(event) {
     const cardSide = event.currentTarget; 
     //const id = event.target.dataset.id;
-    //console.log(id)
 
     if (!cardSide.classList.contains('on')) {
         cardSide.classList.remove('off');
@@ -97,76 +93,68 @@ function turnOverCard(event) {
 ///////////////////////////////////////////////////////////////
 
 
-let firstClickCard = '';
-let secondClickCard = '';
+let firstCard = '';
+let secondCard = '';
 let flipCard = false;
 
 
 function getSearchIdentialCards(event) {
     const card = event.currentTarget;
-    //console.log(card)
-    //console.log(flipCard)
-    //console.log(firstClickCard)
-    //console.log(secondClickCard)
 
     if (!flipCard) {
         flipCard = true;
-        secondClickCard = card;
+        firstCard = card;
         return;
     } 
     
-    firstClickCard = card;
+    secondCard = card;
     matchCards(event)
-
-    console.log('!')
-    
 }
 
 
 function matchCards(event) {
-    //console.log(event.target.dataset.side)
-    console.log(firstClickCard.dataset.id)
-    console.log(secondClickCard.dataset.id)
-    console.log(firstClickCard)
-    console.log(secondClickCard)
-
-
-    if (firstClickCard.dataset.id === secondClickCard.dataset.id) {
+    if (firstCard.dataset.id === secondCard.dataset.id) {
         deleteCards();
-        
+        flipCard = false;
     } else {
-        firstClickCard.classList.remove('on');
-        secondClickCard.classList.remove('on');
-        firstClickCard.classList.add('off');
-        secondClickCard.classList.add('off');
+        let firstClick = firstCard.children[0].parentNode;
+        let secondClick = secondCard.children[0].parentNode;
+
+        setTimeout(() => {
+            firstClick.classList.add('border-red');
+            secondClick.classList.add('border-red');
+        }, 500);
+
+        setTimeout(() => {
+            firstClick.classList.remove('on');
+            secondClick.classList.remove('on');
+            firstClick.classList.remove('border-red');
+            secondClick.classList.remove('border-red');
+        }, 1000);
         
-    }
-
-    //flipCard = false;
-    //firstClickCard = '';
-    //secondClickCard = '';
+        flipCard = false;
+        firstCard = '';
+        secondCard = '';
+    } 
 }
-
-
-function getCard(event) {
-    
-
-}
-getCard()
-
 
 
 function deleteCards() {
-    
+    let firstClick = firstCard.children[1];
+    let secondClick = secondCard.children[1];
 
     setTimeout(() => {
-        console.log(firstClickCard)
-        let classFirstClick = firstClickCard.querySelector('.card');
-        console.log(classFirstClick)
-        //firstClickCard.parentNode.classList.add('delete');
-        
-        //secondClickCard.parentNode.classList.add('delete');
+        firstClick.classList.add('border-green');
+        secondClick.classList.add('border-green');
     }, 1000);
+
+    setTimeout(() => {
+        firstClick.classList.add('delete');
+        secondClick.classList.add('delete');
+    }, 1500);
+
+    firstCard = '';
+    secondCard = '';
 }
 
 
@@ -177,142 +165,4 @@ function getClickturnOverAndSearch(event) {
 
 
 allCards.forEach((card) => card.addEventListener('click', getClickturnOverAndSearch));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-const randomId = getRandomId();
-console.log(randomId);
-let index = 0;
-
-
-function renderHandler() {
-    cards.map((el) => templateImg(el['id'], el['imgBack']) ).join('');
-}
-renderHandler();
-
-
-function templateImg(id, imgBack) {
-
-    let img1 = (cards.find((el) => randomId[index] === el.id)).img
-    index += 1;
-    console.log(img1)
-
-
-    let img2 = (cards.find((el) => randomId[index] === el.id)).img
-    index += 1;
-    console.log(img2)
-
-    const col = document.createElement('div');
-    col.classList.add('col');
-    col.insertAdjacentHTML('afterbegin', `
-        <div class="card">
-            <img class="card-img card-back off" data-side="back" data-id=${id} src=${imgBack}>
-            <img class="card-img card-front on" data-side="front" data-id=${id} src=${img1}>
-        </div>
-        <div class="card">
-            <img class="card-img card-back off" data-side="back" data-id=${id} src=${imgBack}>
-            <img class="card-img card-front on" data-side="front" data-id=${id} src=${img2}>
-        </div>
-    `)
-
-    const menu = document.querySelector('.menu');
-    menu.append(col);
-}
-
-
-let allCards = document.querySelectorAll('.card');
-
-
-function turnOverCard(event) {
-    const sideCard = event.currentTarget;
-    //console.log(sideCard)
-
-    if (!sideCard.classList.contains('on')) {
-        sideCard.classList.remove('off');
-		sideCard.classList.add('on');
-	} else if (sideCard.classList.contains('on')) {
-		sideCard.classList.remove('on');
-		sideCard.classList.add('off');
-	}
-}
-
-
-allCards.forEach((card) => card.addEventListener('click', turnOverCard));
-
-
-////////////////////////////////////////
-
-function shuffle() {
-    const id = cards.map((el) => el.id);
-    //console.log(id)
-
-    for (let i = id.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [id[i], id[j]] = [id[j], id[i]];
-    }
-
-    return id
-}
-shuffle()
-
-
-function getRandomId() {
-    const randomIdFirst = shuffle();
-    //console.log(randomIdFirst);
-
-    const randomIdSecond = shuffle();
-    //console.log(randomIdSecond);
-
-    const randomId = randomIdFirst.concat(randomIdSecond);
-    //console.log(randomId);
-
-    return randomId
-}
-
-*/
-
-
-
-
 
