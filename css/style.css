@@ -103,12 +103,12 @@
   transform-style: preserve-3d;
   transition: transform 1s;
   perspective: 1000px;
+  margin-top: 100px;
 }
 
 .card-img {
   width: 200px;
   height: 260px;
-  margin-top: 100px;
   border-radius: 30px;
   border: 5px solid rgba(214, 91, 202, 0.6);
   box-shadow: 2px 2px 2px rgb(204, 178, 183);
@@ -121,10 +121,28 @@
   left: 0;
 }
 
+
+
+
+
 .on {
   transform: rotateY(-180deg);
 }
 
 .off {
   transform: rotateY(0deg);
+}
+
+.delete {
+  visibility: hidden;
+}
+
+.border-green {
+  border: 10px solid rgba(31, 216, 14, 0.6);
+  box-shadow: 2px 2px 2px rgb(235, 222, 42);
+}
+
+.border-red img{
+  border: 10px solid rgba(245, 13, 40, 0.6);
+  box-shadow: 2px 2px 2px rgb(39, 11, 11);
 }
