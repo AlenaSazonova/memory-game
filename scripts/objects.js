@@ -95,6 +95,7 @@ function turnOverCard(event) {
 
 let firstCard = '';
 let secondCard = '';
+let thirdCard = '';
 let flipCard = false;
 
 
@@ -106,56 +107,92 @@ function getSearchIdentialCards(event) {
         firstCard = card;
         return;
     } 
-    
+
     secondCard = card;
-    matchCards(event)
+    thirdCard = card;
+
+    matchCards(event);
 }
 
 
 function matchCards(event) {
+    let firstClick = firstCard.children[0].parentNode;
+    console.log('firstClick', firstClick);
+    let secondClick = secondCard.children[0].parentNode;
+    console.log('secondClick', secondClick);
+    let thirdClick = thirdCard.children[0].parentNode;
+    console.log('thirdClick', thirdClick);
+
+
+    let firstClickImg = firstCard.children[1];
+    console.log('firstClickImg', firstClickImg);
+    let secondClickImg = secondCard.children[1];
+    console.log('secondClickImg', secondClickImg);
+    let thirdClickImg = secondCard.children[1];
+    console.log('thirdClickImg', thirdClickImg);
+
+
     if (firstCard.dataset.id === secondCard.dataset.id) {
-        deleteCards();
-        flipCard = false;
-    } else {
-        let firstClick = firstCard.children[0].parentNode;
-        let secondClick = secondCard.children[0].parentNode;
+        console.log('firstCard', firstCard);
+        console.log('secondCard', secondCard);
+        console.log('thirdCard', thirdCard);
+        setTimeout(() => {
+            firstClickImg.classList.add('border-green');
+            secondClickImg.classList.add('border-green');
+            thirdClickImg.classList.add('border-red');
+        }, 1000);
 
         setTimeout(() => {
-            firstClick.classList.add('border-red');
+            firstClickImg.classList.add('delete');
+            secondClickImg.classList.add('delete');
+            thirdClickImg.classList.remove('on');
+            firstClickImg.classList.remove('border-green');
+            secondClickImg.classList.remove('border-green');
+            thirdClickImg.classList.remove('border-red');
+        }, 1500);
+        flipCard = false;
+        
+    } else if (firstCard.dataset.id === thirdCard.dataset.id) {
+        setTimeout(() => {
+            firstClickImg.classList.add('border-green');
             secondClick.classList.add('border-red');
-        }, 500);
+            thirdClickImg.classList.add('border-green');
+        }, 1000);
+
+        setTimeout(() => {
+            firstClickImg.classList.add('delete');
+            secondClick.classList.remove('on');
+            thirdClickImg.classList.add('delete');
+            firstClickImg.classList.remove('border-green');
+            secondClick.classList.remove('border-red');
+            thirdClickImg.classList.remove('border-green');
+        }, 1500);
+        flipCard = false;
+
+    } else if (secondCard.dataset.id === thirdCard.dataset.id) {
+        setTimeout(() => {
+            firstClick.classList.add('border-red');
+            secondClickImg.classList.add('border-green');
+            thirdClickImg.classList.add('border-green');
+        }, 1000);
 
         setTimeout(() => {
             firstClick.classList.remove('on');
-            secondClick.classList.remove('on');
+            secondClickImg.classList.add('delete');
+            thirdClickImg.classList.add('delete');
             firstClick.classList.remove('border-red');
-            secondClick.classList.remove('border-red');
-        }, 1000);
-        
+            secondClickImg.classList.remove('border-green');
+            thirdClickImg.classList.remove('border-green');
+        }, 1500);
+        flipCard = false;
+    } 
         flipCard = false;
         firstCard = '';
         secondCard = '';
-    } 
+        thirdCard = '';
+
 }
 
-
-function deleteCards() {
-    let firstClick = firstCard.children[1];
-    let secondClick = secondCard.children[1];
-
-    setTimeout(() => {
-        firstClick.classList.add('border-green');
-        secondClick.classList.add('border-green');
-    }, 1000);
-
-    setTimeout(() => {
-        firstClick.classList.add('delete');
-        secondClick.classList.add('delete');
-    }, 1500);
-
-    firstCard = '';
-    secondCard = '';
-}
 
 
 function getClickturnOverAndSearch(event) {
@@ -165,4 +202,5 @@ function getClickturnOverAndSearch(event) {
 
 
 allCards.forEach((card) => card.addEventListener('click', getClickturnOverAndSearch));
+
 
