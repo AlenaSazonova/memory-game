@@ -1,4 +1,4 @@
-'use strict';
+import { getId, getObjectLength, findCards, closeCards, findSameCards, deleteCards, getIdWithoutPair } from "./utils.js";
 
 const cards = [
     {id: 1, title: 'Cinderella', img: './assets/Cinderella.PNG', imgBack: './assets/backSide.PNG'},
@@ -24,7 +24,6 @@ function templateImg(imgBack) {
     let img1 = (cards.find((el) => randomArr[index] === el.id)).img;
     index++
     let id1 = (cards.find((el) => randomArr[index - 1] === el.id)).id;
-    
 
     let img2 = (cards.find((el) => randomArr[index] === el.id)).img;
     index++
@@ -62,6 +61,7 @@ function shuffle() {
     return id;
 }
 
+
 function getRandomArrayId() {
     const randomArrayId1 = shuffle();
     const randomArrayId2 = shuffle();
@@ -77,13 +77,16 @@ let allCards = document.querySelectorAll('.card');
 
 
 function turnOverCard(event) {
+    if (getObjectLength(openedCards) > 2) {
+        return;
+    }
+
     const cardSide = event.currentTarget; 
-    //const id = event.target.dataset.id;
 
     if (!cardSide.classList.contains('on')) {
         cardSide.classList.remove('off');
 		cardSide.classList.add('on');
-	} else if (cardSide.classList.contains('on')) {
+	} else {
 		cardSide.classList.remove('on');
 		cardSide.classList.add('off');
 	}
@@ -93,114 +96,51 @@ function turnOverCard(event) {
 ///////////////////////////////////////////////////////////////
 
 
-let firstCard = '';
-let secondCard = '';
-let thirdCard = '';
-let flipCard = false;
+let openedCards = {}
 
 
-function getSearchIdentialCards(event) {
+function clickOnCard(event) { 
     const card = event.currentTarget;
+    const id = getId(card);
 
-    if (!flipCard) {
-        flipCard = true;
-        firstCard = card;
-        return;
+    if (!Object.hasOwn(openedCards, id)) {
+        openedCards[id] = card;
+    } else { 
+        openedCards['hasPair'] = id;
+    }
+
+    if (getObjectLength(openedCards) === 3) {
+        matchCards();
     } 
-
-    secondCard = card;
-    thirdCard = card;
-
-    matchCards(event);
 }
 
 
-function matchCards(event) {
-    let firstClick = firstCard.children[0].parentNode;
-    console.log('firstClick', firstClick);
-    let secondClick = secondCard.children[0].parentNode;
-    console.log('secondClick', secondClick);
-    let thirdClick = thirdCard.children[0].parentNode;
-    console.log('thirdClick', thirdClick);
+function matchCards() {
+    const cards = findCards('.card');
 
+    if (!Object.hasOwn(openedCards, 'hasPair')) {
+        closeCards(cards);
+    } else {
+        const id = openedCards['hasPair']; //sameId
+        const sameCards = findSameCards(cards, id);
+        deleteCards(sameCards);
 
-    let firstClickImg = firstCard.children[1];
-    console.log('firstClickImg', firstClickImg);
-    let secondClickImg = secondCard.children[1];
-    console.log('secondClickImg', secondClickImg);
-    let thirdClickImg = secondCard.children[1];
-    console.log('thirdClickImg', thirdClickImg);
+        const idWithoutPair = getIdWithoutPair(openedCards);
+        const cardWithoutPair = findSameCards(cards, idWithoutPair);
+        closeCards(cardWithoutPair);
+    }
 
-
-    if (firstCard.dataset.id === secondCard.dataset.id) {
-        console.log('firstCard', firstCard);
-        console.log('secondCard', secondCard);
-        console.log('thirdCard', thirdCard);
-        setTimeout(() => {
-            firstClickImg.classList.add('border-green');
-            secondClickImg.classList.add('border-green');
-            thirdClickImg.classList.add('border-red');
-        }, 1000);
-
-        setTimeout(() => {
-            firstClickImg.classList.add('delete');
-            secondClickImg.classList.add('delete');
-            thirdClickImg.classList.remove('on');
-            firstClickImg.classList.remove('border-green');
-            secondClickImg.classList.remove('border-green');
-            thirdClickImg.classList.remove('border-red');
-        }, 1500);
-        flipCard = false;
-        
-    } else if (firstCard.dataset.id === thirdCard.dataset.id) {
-        setTimeout(() => {
-            firstClickImg.classList.add('border-green');
-            secondClick.classList.add('border-red');
-            thirdClickImg.classList.add('border-green');
-        }, 1000);
-
-        setTimeout(() => {
-            firstClickImg.classList.add('delete');
-            secondClick.classList.remove('on');
-            thirdClickImg.classList.add('delete');
-            firstClickImg.classList.remove('border-green');
-            secondClick.classList.remove('border-red');
-            thirdClickImg.classList.remove('border-green');
-        }, 1500);
-        flipCard = false;
-
-    } else if (secondCard.dataset.id === thirdCard.dataset.id) {
-        setTimeout(() => {
-            firstClick.classList.add('border-red');
-            secondClickImg.classList.add('border-green');
-            thirdClickImg.classList.add('border-green');
-        }, 1000);
-
-        setTimeout(() => {
-            firstClick.classList.remove('on');
-            secondClickImg.classList.add('delete');
-            thirdClickImg.classList.add('delete');
-            firstClick.classList.remove('border-red');
-            secondClickImg.classList.remove('border-green');
-            thirdClickImg.classList.remove('border-green');
-        }, 1500);
-        flipCard = false;
-    } 
-        flipCard = false;
-        firstCard = '';
-        secondCard = '';
-        thirdCard = '';
-
+    setTimeout(() => {
+        openedCards = {};
+    }, 2000);
 }
 
 
-
-function getClickturnOverAndSearch(event) {
+function getClick(event) {
     turnOverCard(event);
-    getSearchIdentialCards(event);
+    clickOnCard(event);
 }
 
 
-allCards.forEach((card) => card.addEventListener('click', getClickturnOverAndSearch));
-
+allCards.forEach((card) => card.addEventListener('click', getClick));
 
